@@ -31,17 +31,29 @@
 ##   * <Project homepage at https://github.com/qq542vev/build-yash>
 ##   * <Bag report at https://github.com/qq542vev/build-yash/issues>
 
-ARG BUILD_BASE="alpine:3.19"
+ARG BUILD_BASE="ubuntu:18.04"
 
 FROM "${BUILD_BASE}" AS build
 
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 TZ=UTC0
-SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 TZ=UTC0 DEBIAN_FRONTEND="noninteractive"
+SHELL ["/bin/bash", "-euo", "pipefail", "-o", "posix", "-c"]
 
 RUN \
-	apk update && apk upgrade && \
-	apk add --no-cache \
-		 asciidoc build-base gettext gettext-dev gettext-static git ncurses ncurses-dev ncurses-static
+	apt-get update && \
+	apt-get install -y --no-install-recommends \
+		ca-certificates ubuntu-advantage-tools
+
+RUN --mount=type=secret,id=attach \
+	ATTACH_FILE=/run/secrets/attach && \
+	if [ -s "${ATTACH_FILE}" ]; then \
+		ua attach --attach-config "${ATTACH_FILE}" && \
+		trap 'ua detach --assume-yes || exit "${?}"' EXIT && \
+		apt-get update && \
+		apt-get upgrade -y --no-install-recommends; \
+	fi && \
+	apt-get install -y --no-install-recommends \
+		asciidoc build-essential docbook-xsl gettext git libncurses-dev xsltproc && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /work
 COPY .git .
@@ -54,7 +66,7 @@ RUN LDFLAGS="-static" sh configure ${CONFIGURE_OPTS} 2>&1 | tee configure.log
 
 ARG MAKE_OPTS=
 RUN make ${MAKE_OPTS} 2>&1 | tee make.log
-RUN name="yash-${REV}" && dir="/tmp/${name}" && mkdir "${dir}" && make DESTDIR="${dir}" ${MAKE_OPTS} install && tar -cvf "${name}-Linux-$(uname -m).tar.gz" -C "${dir}/.." "${name}"
+RUN name="yash-${REV}" && dir="/tmp/${name}" && mkdir "${dir}" && make DESTDIR="${dir}" ${MAKE_OPTS} install && tar -czvf "${name}-linux-$(uname -m).tar.gz" -C "${dir}/.." "${name}"
 
 FROM scratch
 COPY --from=build /work/yash*.tar.gz /

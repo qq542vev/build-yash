@@ -35,8 +35,8 @@
 VERSION = 1.0.0
 
 DIR = build
-#ARCHS = 386 amd64 arm/v6 arm/v7 arm64 ppc64le s390x
-ARCHS = amd64
+ARCHS = 386 amd64 arm/v7 arm64 ppc64le s390x
+#ARCHS = arm64
 PARCHS != for arch in $(ARCHS); do echo "%/$${arch}"; done
 UPSTREAM = https://github.com/magicant/yash.git
 
@@ -49,8 +49,9 @@ SET = \
 	trap '[ "$${?}" -ne 0 ] && rm -rf "$(@)"' EXIT HUP INT QUIT TERM; \
 	set -- '$(@:$(DIR)/%=%)'; \
 	export ARCH="$${1\#*/}" REV="$${1%%/*}"
-#TAGS = 2.55 2.56 2.56.1 2.57 2.58 2.58.1 2.59 2.60
-TAGS = 2.59
+#TAGS = 2.56 2.56.1 2.57 2.58 2.58.1 2.59 2.60
+TAGS = 2.55 2.56 2.56.1 2.57 2.58 2.58.1 2.59 2.60
+#TAGS = 2.59
 
 # Build
 # =====
