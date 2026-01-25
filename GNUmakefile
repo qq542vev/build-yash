@@ -8,7 +8,7 @@
 ##
 ##   id - fa81a0e9-4012-432d-9b89-046c3bed5a23
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.0.1
+##   version - 1.0.2
 ##   created - 2026-01-09
 ##   modified - 2026-01-25
 ##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
@@ -30,9 +30,9 @@
 # Macro
 # =====
 
-.SHELLFLAGS = -efu -c
+.SHELLFLAGS = -efuo pipefail -c
 
-VERSION = 1.0.0
+VERSION = 1.0.2
 
 DIR = build
 ARCHS = 386 amd64 arm/v7 arm64 ppc64le s390x
