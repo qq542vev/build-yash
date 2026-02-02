@@ -19,9 +19,9 @@
 ##
 ##   id - f98f766b-49fb-4f36-b692-ed8dcfd2e2bc
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.0.0
+##   version - 1.0.1
 ##   created - 2026-01-08
-##   modified - 2026-01-08
+##   modified - 2026-02-02
 ##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
 ##   license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
 ##   conforms-to - <https://docs.docker.com/reference/dockerfile/>
@@ -66,7 +66,7 @@ RUN LDFLAGS="-static" sh configure ${CONFIGURE_OPTS} 2>&1 | tee configure.log
 
 ARG MAKE_OPTS=
 RUN make ${MAKE_OPTS} 2>&1 | tee make.log
-RUN name="yash-${REV}" && dir="/tmp/${name}" && mkdir "${dir}" && make DESTDIR="${dir}" ${MAKE_OPTS} install && tar -czvf "${name}-linux-$(uname -m).tar.gz" -C "${dir}/.." "${name}"
+RUN name="yash-${REV}-linux-$(uname -m)" && dir="/tmp/${name}" && mkdir "${dir}" && make DESTDIR="${dir}" ${MAKE_OPTS} install && tar -czvf "${name}.tar.gz" -C "${dir}/.." "${name}"
 
 FROM scratch
 COPY --from=build /work/yash*.tar.gz /
