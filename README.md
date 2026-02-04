@@ -25,4 +25,4 @@ Build Yashは、Linux環境を前提として複数アーキテクチャ向け�
 
 ## ライセンス
 
-Build Yashに於いて作成したファイルは[LICENSE.txt](LICENSE.txt)の記載に従います。Yash自体のライセンスは[LICENSE.md](https://github.com/qq542vev/build-yash/blob/trunk/COPYING)の記載に従います。
+Build Yashに於いて作成したファイルは[LICENSE.txt](LICENSE.txt)の記載に従います。Yash自体のライセンスは[COPYING](https://github.com/qq542vev/build-yash/blob/trunk/COPYING)の記載に従います。
