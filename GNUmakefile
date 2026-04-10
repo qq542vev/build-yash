@@ -71,7 +71,7 @@ rebuild: clean
 	$(MAKE)
 
 update:
-	git fetch --force '$(UPSTREAM)' 'trunk:trunk'
+	git fetch --force --tags '$(UPSTREAM)' 'trunk:trunk'
 
 publish:
 	for tag in $(TAGS); do \
