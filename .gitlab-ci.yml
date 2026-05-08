@@ -40,6 +40,8 @@ build_arch:
     # ビルドスクリプトのあるブランチに切り替え
     - git fetch origin docker-build
     - git checkout docker-build
+    # 上流のタグを取得して参照可能にする
+    - git fetch --tags https://github.com/magicant/yash.git
     # RELEASE_TAG が指定されている場合はそれを使用する
     - export CI_COMMIT_TAG=${RELEASE_TAG:-$CI_COMMIT_TAG}
     # QEMU (エミュレーター) のセットアップ
@@ -71,6 +73,8 @@ publish_release:
     # ビルドスクリプトのあるブランチに切り替え
     - git fetch origin docker-build
     - git checkout docker-build
+    # 上流のタグを取得して参照可能にする
+    - git fetch --tags https://github.com/magicant/yash.git
     # RELEASE_TAG が指定されている場合はそれを使用する
     - export CI_COMMIT_TAG=${RELEASE_TAG:-$CI_COMMIT_TAG}
     - export GITLAB_TOKEN=$CI_JOB_TOKEN
