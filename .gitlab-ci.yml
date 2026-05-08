@@ -47,7 +47,7 @@ build_arch:
     # Buildx のセットアップ
     - docker buildx create --use
     # Ubuntu Pro トークンを含むシークレットファイルのリンク
-    - ln -s "$ATTACH_YAML" attach.yaml
+    - ln -sf "$ATTACH_YAML" attach.yaml
   script:
     # Makefile のターゲット形式 (build/TAG/ARCH) で実行
     - make "build/${CI_COMMIT_TAG}/${ARCH}"
