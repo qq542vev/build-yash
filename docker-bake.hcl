@@ -44,11 +44,7 @@ target "default" {
     REV = REV
   }
   secret = [
-    {
-      type = "file"
-      id = "attach"
-      src = "attach.yaml"
-    }
+    "id=attach,src=attach.yaml"
   ]
   output = [
     "type=tar,dest=-"
