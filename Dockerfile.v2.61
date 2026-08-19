@@ -1,0 +1,62 @@
+### File: Dockerfile
+##
+## YASH v2.61以降を組み立てる。
+##
+## Usage:
+##
+## ------ Text ------
+## docker buildx build -f Dockerfile
+## ------------------
+##
+## Build arg:
+##
+##   BUILD_BASE - ビルド時に使用するイメージ名。
+##   REV - Gitリポジトリのリビジョン識別子。
+##   CONFIGURE_OPTS - configureコマンドへのオプション。
+##   MAKE_OPTS - makeコマンドへのオプション。
+##
+## Metadata:
+##
+##   id - 8c6e9ef8-c3d9-46f9-b53f-15be83cf164d
+##   author - <qq542vev at https://purl.org/meta/me/>
+##   version - 1.0.0
+##   created - 2026-08-20
+##   modified - 2026-08-20
+##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
+##   license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
+##   conforms-to - <https://docs.docker.com/reference/dockerfile/>
+##
+## See Also:
+##
+##   * <Project homepage at https://github.com/qq542vev/build-yash>
+##   * <Bug report at https://github.com/qq542vev/build-yash/issues>
+
+ARG BUILD_BASE="debian:13-slim"
+
+FROM "${BUILD_BASE}" AS build
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 TZ=UTC0 DEBIAN_FRONTEND="noninteractive"
+SHELL ["/bin/bash", "-euo", "pipefail", "-o", "posix", "-c"]
+
+RUN \
+	apt-get update && \
+	apt-get install -y --no-install-recommends \
+		asciidoc build-essential ca-certificates docbook-xsl gettext git libncurses-dev xsltproc && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /work
+COPY .git .
+
+ARG REV=2.61
+RUN git archive --format=tar "${REV}" | tar -xv
+
+ARG CONFIGURE_OPTS=
+RUN LDFLAGS="-static" sh configure ${CONFIGURE_OPTS} 2>&1 | tee configure.log
+
+ARG MAKE_OPTS=
+RUN make ${MAKE_OPTS} 2>&1 | tee make.log
+RUN name="yash-${REV}-linux-$(uname -m)" && dir="/tmp/${name}" && mkdir "${dir}" && make DESTDIR="${dir}" ${MAKE_OPTS} install && tar -czvf "${name}.tar.gz" -C "${dir}/.." "${name}"
+
+FROM scratch
+COPY --from=build /work/yash*.tar.gz /
+COPY --from=build /work/configure.log /work/make.log /
