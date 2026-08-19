@@ -18,7 +18,7 @@
 ## See Also:
 ##
 ##   * <Project homepage at https://github.com/qq542vev/build-yash>
-##   * <Bag report at https://github.com/qq542vev/build-yash/issues>
+##   * <Bug report at https://github.com/qq542vev/build-yash/issues>
 
 # Sp Targets
 # ==========
@@ -27,9 +27,12 @@
 
 .SILENT: help version
 
+.DELETE_ON_ERROR:
+
 # Macro
 # =====
 
+SHELL = sh
 .SHELLFLAGS = -efuo pipefail -c
 
 VERSION = 1.0.2
@@ -38,13 +41,13 @@ DIR = build
 ARCHS = 386 amd64 arm/v7 arm64 ppc64le s390x
 PARCHS != for arch in $(ARCHS); do echo "%/$${arch}"; done
 UPSTREAM = https://github.com/magicant/yash.git
-
-DOCKER = eval docker buildx bake --progress plain $${opts-} $(DOCKER_OPTS) | tar -xvC '$(@)'
+DOCKER_OPTS =
+DOCKER = docker buildx bake --progress plain $(DOCKER_OPTS) | tar -xvC '$(@)'
 CMD = { mkdir -p -- '$(@)' && $(DOCKER); }
 YASH_V2 = $(CMD)
 YASH_CURR = $(YASH_V2)
 SET = \
-	trap '[ "$${?}" -ne 0 ] && rm -rf "$(@)"' EXIT HUP INT QUIT TERM; \
+	trap '[ "$${?}" -ne 0  ] && rm -rf "$(@)"' EXIT HUP INT QUIT TERM; \
 	set -- '$(@:$(DIR)/%=%)'; \
 	export ARCH="$${1\#*/}" REV="$${1%%/*}"
 TAGS != git tag -l --sort=version:refname '2.[0-9]*' | grep -Fxv -e '2.7'

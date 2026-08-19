@@ -28,7 +28,7 @@
 ## See Also:
 ##
 ##   * <Project homepage at https://github.com/qq542vev/build-yash>
-##   * <Bag report at https://github.com/qq542vev/build-yash/issues>
+##   * <Bug report at https://github.com/qq542vev/build-yash/issues>
 
 variable "REV" {default = "2.60"}
 variable "ARCH" {default = "386"}

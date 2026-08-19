@@ -29,7 +29,7 @@
 ## See Also:
 ##
 ##   * <Project homepage at https://github.com/qq542vev/build-yash>
-##   * <Bag report at https://github.com/qq542vev/build-yash/issues>
+##   * <Bug report at https://github.com/qq542vev/build-yash/issues>
 
 ARG BUILD_BASE="ubuntu:18.04"
 
