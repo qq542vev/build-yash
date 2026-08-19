@@ -33,20 +33,20 @@
 variable "REV" {default = "2.60"}
 variable "ARCH" {default = "386"}
 variable "DOCKERFILE" {
-  default = try("Dockerfile.${regex("^v[1-9][0-9]*", "${REV}")}", "Dockerfile")
+	default = try("Dockerfile.${regex("^v[1-9][0-9]*", "${REV}")}", "Dockerfile")
 }
 
 target "default" {
-  context = "."
-  dockerfile = "${DOCKERFILE}"
-  platforms = ["linux/${ARCH}"]
-  args = {
-    REV = REV
-  }
-  secret = [
-    "id=attach,src=attach.yaml"
-  ]
-  output = [
-    "type=tar,dest=-"
-  ]
+	context = "."
+	dockerfile = "${DOCKERFILE}"
+	platforms = ["linux/${ARCH}"]
+	args = {
+		REV = REV
+	}
+	secret = [
+		"id=attach,src=attach.yaml"
+	]
+	output = [
+		"type=tar,dest=-"
+	]
 }
