@@ -8,9 +8,9 @@
 ##
 ##   id - fa81a0e9-4012-432d-9b89-046c3bed5a23
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.0.2
+##   version - 1.1.0
 ##   created - 2026-01-09
-##   modified - 2026-01-25
+##   modified - 2026-08-20
 ##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
 ##   license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
 ##   depends - find, git, glab, grep, mkdir, mv, rm, tail, tar
@@ -35,7 +35,7 @@
 SHELL = sh
 .SHELLFLAGS = -efuo pipefail -c
 
-VERSION = 1.0.2
+VERSION = 1.1.0
 
 UPSTREAM = https://github.com/magicant/yash.git
 DOCKER_OPTS =
