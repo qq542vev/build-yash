@@ -13,7 +13,7 @@
 ##   modified - 2026-01-25
 ##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
 ##   license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
-##   depends - find, git, glab, grep, mkdir, mv, rm, tar
+##   depends - find, git, glab, grep, mkdir, mv, rm, tail, tar
 ##
 ## See Also:
 ##
@@ -23,7 +23,7 @@
 # Sp Targets
 # ==========
 
-.PHONY: all clean rebuild update publish unpublish help version
+.PHONY: FORCE all list clean rebuild update publish unpublish help version
 
 .SILENT: help version
 
@@ -37,20 +37,25 @@ SHELL = sh
 
 VERSION = 1.0.2
 
+UPSTREAM = https://github.com/magicant/yash.git
+DOCKER_OPTS =
+TAG_LIMIT = 2147483647
+
 DIR = build
 ARCHS = 386 amd64 arm/v7 arm64 ppc64le s390x
 PARCHS != for arch in $(ARCHS); do echo "%/$${arch}"; done
-UPSTREAM = https://github.com/magicant/yash.git
-DOCKER_OPTS =
 DOCKER = docker buildx bake --progress plain $(DOCKER_OPTS) | tar -xvC '$(@)'
 CMD = { mkdir -p -- '$(@)' && $(DOCKER); }
 YASH_V2 = $(CMD)
 YASH_CURR = $(YASH_V2)
 SET = \
-	trap '[ "$${?}" -ne 0  ] && rm -rf "$(@)"' EXIT HUP INT QUIT TERM; \
+	trap 'case "$${?}" in [!0]*) rm -rf "$(@)"; exit;; esac' EXIT HUP INT QUIT TERM; \
 	set -- '$(@:$(DIR)/%=%)'; \
-	export ARCH="$${1\#*/}" REV="$${1%%/*}"
-TAGS != git tag -l --sort=version:refname '2.[0-9]*' | grep -Fxv -e '2.7'
+	export ARCH="$${1\#*/}" REV="$${1%%/*}"; \
+	case "$${REV}" in \
+		2.61) export DOCKERFILE=Dockerfile.v2.61;; \
+	esac
+TAGS != git tag -l --sort=version:refname '2.[0-9]*' | grep -Fxv -e 2.7 | tail -n '$(TAG_LIMIT)'
 
 # Build
 # =====
@@ -58,7 +63,7 @@ TAGS != git tag -l --sort=version:refname '2.[0-9]*' | grep -Fxv -e '2.7'
 all:
 	$(MAKE) $(TAGS:%=$(DIR)/%/all)
 
-$(DIR)/%/all:
+$(DIR)/%/all: FORCE
 	for target in $(ARCHS:%=$(@D)/%); do $(MAKE) "$${target}"; done
 
 $(ARCHS:%=$(DIR)/%):
@@ -66,6 +71,19 @@ $(ARCHS:%=$(DIR)/%):
 
 $(PARCHS:%=$(DIR)/2.%):
 	$(SET); $(YASH_V2)
+
+FORCE:
+
+# List
+# ====
+
+list: $(TAGS:%=$(DIR)/%/list)
+
+$(DIR)/%/list: FORCE
+	@for target in $(ARCHS:%=$(@D)/%); do echo "$${target}"; done
+
+# Clean
+# =====
 
 clean:
 	rm -rf -- '$(DIR)'
@@ -75,6 +93,9 @@ rebuild: clean
 
 update:
 	git fetch --force --tags '$(UPSTREAM)' 'trunk:trunk'
+
+# Upload
+# ======
 
 publish:
 	for tag in $(TAGS); do \
@@ -100,11 +121,13 @@ help:
 	echo '  make [OPTION...] [MACRO=VALUE...] [TARGET...]'
 	echo
 	echo 'MACRO:'
-	echo '  DOCKER_OPTS   dockerコマンドへの追加オプション。'
-	echo '  UPSTREAM      リモートリポジトリのアップストリーム用のURL。'
+	echo '  DOCKER_OPTS dockerコマンドへの追加オプション。'
+	echo '  TAG_LIMIT   対象にするタグの最大件数。'
+	echo '  UPSTREAM    リモートリポジトリのアップストリーム用のURL。'
 	echo
 	echo 'TARGET:'
 	echo '  all       全てのファイルを作成する。'
+	echo '  list      対象にするファイルの一覧を表示する。'
 	echo '  clean     作成したファイルを削除する。'
 	echo '  rebuild   cleanの実行後にallを実行する。'
 	echo '  update    ローカルリポジトリを更新する。'
