@@ -5,7 +5,7 @@
 ## Usage:
 ##
 ## ------ Text ------
-## docker buildx build -f Dockerfile
+## docker buildx build -f Dockerfile.v2 .
 ## ------------------
 ##
 ## Build arg:

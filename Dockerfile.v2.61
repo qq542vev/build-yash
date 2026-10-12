@@ -1,11 +1,11 @@
 ### File: Dockerfile
 ##
-## YASH v2.61以降を組み立てる。
+## YASH v2.61を組み立てる。
 ##
 ## Usage:
 ##
 ## ------ Text ------
-## docker buildx build -f Dockerfile
+## docker buildx build -f Dockerfile.v2.61 .
 ## ------------------
 ##
 ## Build arg:
