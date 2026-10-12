@@ -51,7 +51,11 @@ ARG REV=2.61
 RUN git archive --format=tar "${REV}" | tar -xv
 
 ARG CONFIGURE_OPTS=
-RUN LDFLAGS="-static" sh configure ${CONFIGURE_OPTS} 2>&1 | tee configure.log
+
+# glibc BZ #33935 の回避（glibc 2.44 で修正）。
+# 静的リンク時に _IO_wfile_doallocate が欠落し、
+# コマンド置換の fgetwc() で SIGSEGV が発生するため、明示的にリンクする。
+RUN LDFLAGS="-static -Wl,-u,_IO_wfile_doallocate" sh configure ${CONFIGURE_OPTS} 2>&1 | tee configure.log
 
 ARG MAKE_OPTS=
 RUN make ${MAKE_OPTS} 2>&1 | tee make.log
