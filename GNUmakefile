@@ -47,7 +47,6 @@ PARCHS != for arch in $(ARCHS); do echo "%/$${arch}"; done
 DOCKER = docker buildx bake --progress plain $(DOCKER_OPTS) | tar -xvC '$(@)'
 CMD = { mkdir -p -- '$(@)' && $(DOCKER); }
 YASH_V2 = $(CMD)
-YASH_CURR = $(YASH_V2)
 SET = \
 	trap 'case "$${?}" in [!0]*) rm -rf "$(@)"; exit;; esac' EXIT HUP INT QUIT TERM; \
 	set -- '$(@:$(DIR)/%=%)'; \
@@ -66,11 +65,8 @@ all:
 $(DIR)/%/all: FORCE
 	for target in $(ARCHS:%=$(@D)/%); do $(MAKE) "$${target}"; done
 
-$(ARCHS:%=$(DIR)/%):
-	$(SET); $(YASH_CURR)
-
-$(PARCHS:%=$(DIR)/2.%):
-	$(SET); $(YASH_V2)
+$(PARCHS:%=$(DIR)/2.%): Dockerfile.v2 Dockerfile.v2.61 docker-bake.hcl GNUmakefile
+	$(SET); $(YASH_V2); touch '$(@)'
 
 FORCE:
 
