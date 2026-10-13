@@ -60,7 +60,7 @@ TAGS != git tag -l --sort=version:refname '2.[0-9]*' | grep -Fxv -e 2.7 | tail -
 # =====
 
 all:
-	$(MAKE) $(TAGS:%=$(DIR)/%/all)
+	case '$(TAGS)' in ?*) $(MAKE) $(TAGS:%=$(DIR)/%/all);; esac
 
 $(DIR)/%/all: FORCE
 	for target in $(ARCHS:%=$(@D)/%); do $(MAKE) "$${target}"; done
