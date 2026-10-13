@@ -6,9 +6,9 @@ Metadata:
 
 	id - 2672a38d-da8c-4a11-af65-13191c9c8869
 	author - <qq542vev at https://purl.org/meta/me/>
-	version - 0.2.0
+	version - 0.2.1
 	created - 2026-02-05
-	modified - 2026-08-20
+	modified - 2026-10-12
 	copyright - Copyright (C) 2026-2026 qq542vev. Some rights reserved.
 	license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
 	conforms-to - <https://spec.commonmark.org/current/>

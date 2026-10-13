@@ -18,9 +18,9 @@
 ##
 ##   id - a5fcfbac-d7ad-404f-808d-f36211691bd8
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.0.1
+##   version - 1.0.2
 ##   created - 2026-01-09
-##   modified - 2026-01-17
+##   modified - 2026-10-13
 ##   copyright - Copyright (C) 2026-2026 qq542vev. All rights reserved.
 ##   license - <GPL-3.0-only at https://www.gnu.org/licenses/gpl-3.0.txt>
 ##   conforms-to - <https://docs.docker.com/build/bake/reference/>
